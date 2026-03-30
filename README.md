@@ -10,7 +10,7 @@ It is designed as a small operating surface rather than a framework: clear runbo
 - `runbook/`: live operating guidance and current priority
 - `policies/`: stable guardrails, continuation rules, and logging rules
 - `templates/`: reusable cycle, loop-run, and handoff formats
-- `logs/`: historical run material kept for context
+- `logs/`: optional run history for the project using this repo
 - `scripts/`: lightweight validation helpers
 
 ## Quick start
@@ -28,5 +28,5 @@ It is designed as a small operating surface rather than a framework: clear runbo
 
 ## Publishing notes
 
-- The repo is self-contained and does not require a sibling workspace.
-- Historical imported logs under `logs/` are reference material, not active doctrine.
+- The repo is self-contained and does not depend on a specific workspace layout.
+- Start `logs/` fresh for the project where you adopt this repo.

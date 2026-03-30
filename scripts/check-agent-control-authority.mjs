@@ -71,7 +71,6 @@ function main() {
     "npm run check:agent-control",
   ]);
   assertContainsNone("README.md", readmeText, [
-    "directive-workspace/",
     "control/runbook/",
     "control/policies/",
     "control/logs/",
@@ -88,7 +87,6 @@ function main() {
     "policies/logging-rules.md",
   ]);
   assertContainsNone("implement.md", implementText, [
-    "directive-workspace/",
     "control/",
     "CLAUDE.md",
     "AGENTS.md",
@@ -119,11 +117,9 @@ function main() {
     "npm run check:agent-control",
   ]);
   assertContainsNone("runbook/active.md", activeRunbookText, [
-    "directive-workspace/",
     "control/",
     "CLAUDE.md",
     "AGENTS.md",
-    "report:directive-workspace-state",
   ]);
 
   assertContainsAll("runbook/current-priority.md", currentPriorityText, [
@@ -134,9 +130,7 @@ function main() {
     "npm run check:agent-control",
   ]);
   assertContainsNone("runbook/current-priority.md", currentPriorityText, [
-    "directive-workspace/",
-    ".openclaw\\workspace\\directive-workspace",
-    "report:directive-workspace-state",
+    "C:\\Users\\",
   ]);
 
   assertContainsAll("policies/stop-lines.md", stopLinesText, [
@@ -144,11 +138,6 @@ function main() {
     "## Current Scope Stop-Line",
     "## Current Loop Execution Stop-Line",
   ]);
-  assertContainsNone("policies/stop-lines.md", stopLinesText, [
-    "scripts/report-directive-workspace-state.ts",
-    "shared/lib/dw-state.ts",
-  ]);
-
   assertContainsAll("policies/continuation-rules.md", continuationRulesText, [
     "## Task selection policy",
     "## Required cycle framing",
@@ -168,7 +157,6 @@ function main() {
     "npm run check:agent-control",
     "npm run check",
   ]);
-  assertContainsNone("templates/loop-run.md", loopTemplateText, ["report:directive-workspace-state"]);
 
   process.stdout.write(
     `${JSON.stringify(

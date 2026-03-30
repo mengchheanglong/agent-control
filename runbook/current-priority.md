@@ -32,7 +32,7 @@ Canonical surface:
 
 Required baseline truths:
 - active docs and scripts must use repo-root-relative paths
-- imported material under `logs/` is historical context, not current doctrine
+- material under `logs/` is archival context, not current doctrine
 - current instructions must not require a sibling external repo to exist
-- current instructions must not require `.openclaw\workspace` or another hidden home-directory layout
+- current instructions must not require a tool-specific hidden workspace layout
 - `npm run check:agent-control` should pass from this repo root

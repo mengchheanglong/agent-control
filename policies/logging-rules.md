@@ -15,7 +15,7 @@ Use:
 - place historical run logs under `logs/YYYY-MM/`
 - keep active operating guidance out of historical log files
 - leave `implement.md` as a thin entrypoint only
-- label imported legacy material as historical when it is still useful to keep
+- label archived material clearly when it is still useful to keep
 
 ## Logging model
 

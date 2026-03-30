@@ -8,9 +8,9 @@ Allowed now:
 - bounded cleanup that removes parent-workspace assumptions
 
 Explicitly not allowed now:
-- reintroducing `directive-workspace/` as a required parent
-- hardcoded `.openclaw\workspace` or sibling-root assumptions
-- treating imported logs as active instructions
+- reintroducing a sibling workspace as a required parent
+- hardcoded hidden-workspace or sibling-root assumptions
+- treating archived logs as active instructions
 - compatibility shims that hide missing standalone structure instead of fixing it
 
 Reopen criteria:
