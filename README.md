@@ -30,4 +30,3 @@ It is designed as a small operating surface rather than a framework: clear runbo
 
 - The repo is self-contained and does not require a sibling workspace.
 - Historical imported logs under `logs/` are reference material, not active doctrine.
-- License and remote metadata are intentionally left to the publisher.
