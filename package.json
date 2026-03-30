@@ -1,0 +1,21 @@
+{
+  "name": "agent-control",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone control surface for agent workflow, bounded loops, verification, and handoff discipline.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "check": "npm run check:agent-control",
+    "check:agent-control": "node scripts/check-agent-control-authority.mjs"
+  },
+  "keywords": [
+    "agents",
+    "workflow",
+    "loops",
+    "verification",
+    "handoff"
+  ]
+}
