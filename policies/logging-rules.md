@@ -26,7 +26,7 @@ For repeated same-class wording or authority-alignment micro-repairs, prefer bat
 - one compact bullet per verified micro-fix
 - one final stop summary
 
-Reserve full standalone cycle entries for slices that:
+Reserve full cycle entries for slices that:
 - change structural rules
 - add a new contract or check
 - require non-trivial project interpretation

@@ -14,7 +14,9 @@ const STOP_LINES_PATH = path.join(ROOT, "policies", "stop-lines.md");
 const CONTINUATION_RULES_PATH = path.join(ROOT, "policies", "continuation-rules.md");
 const LOGGING_RULES_PATH = path.join(ROOT, "policies", "logging-rules.md");
 const LOGS_README_PATH = path.join(ROOT, "logs", "README.md");
+const CYCLE_TEMPLATE_PATH = path.join(ROOT, "templates", "cycle-entry.md");
 const LOOP_TEMPLATE_PATH = path.join(ROOT, "templates", "loop-run.md");
+const HANDOFF_TEMPLATE_PATH = path.join(ROOT, "templates", "handoff.md");
 
 function readText(filePath) {
   assert.ok(fs.existsSync(filePath), `Missing Agent Control authority surface: ${filePath}`);
@@ -37,6 +39,18 @@ function assertDoesNotMatch(label, text, pattern, message) {
   assert.ok(!pattern.test(text), `${label} must not contain ${message}`);
 }
 
+function assertHeadings(label, text, requiredHeadings) {
+  for (const heading of requiredHeadings) {
+    assert.match(text, new RegExp(`^${escapeRegExp(heading)}$`, "mu"), `${label} is missing heading: ${heading}`);
+  }
+}
+
+function assertLines(label, text, requiredLines) {
+  for (const line of requiredLines) {
+    assert.match(text, new RegExp(`^${escapeRegExp(line)}$`, "mu"), `${label} is missing line: ${line}`);
+  }
+}
+
 function countLinesMatching(text, pattern) {
   return text
     .split(/\r?\n/u)
@@ -53,6 +67,10 @@ function toRepoPath(filePath) {
   return path.relative(ROOT, filePath).replace(/\\/g, "/");
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+}
+
 function main() {
   const readmeText = readText(README_PATH);
   const implementText = readText(IMPLEMENT_PATH);
@@ -64,11 +82,13 @@ function main() {
   const continuationRulesText = readText(CONTINUATION_RULES_PATH);
   const loggingRulesText = readText(LOGGING_RULES_PATH);
   const logsReadmeText = readText(LOGS_README_PATH);
+  const cycleTemplateText = readText(CYCLE_TEMPLATE_PATH);
   const loopTemplateText = readText(LOOP_TEMPLATE_PATH);
+  const handoffTemplateText = readText(HANDOFF_TEMPLATE_PATH);
 
   assertContainsAll("README.md", readmeText, [
     "# Agent Control",
-    "standalone repo",
+    "self-contained repo",
     "implement.md",
     "runbook/active.md",
     "runbook/current-priority.md",
@@ -78,6 +98,12 @@ function main() {
     "logs/",
     "templates/",
     "npm run check:agent-control",
+  ]);
+  assertHeadings("README.md", readmeText, [
+    "## What lives here",
+    "## Quick start",
+    "## Checks",
+    "## Publishing notes",
   ]);
   assertDoesNotMatch(
     "README.md",
@@ -131,7 +157,7 @@ function main() {
   assertDoesNotMatch("package.json", packageJsonText, /\bcheck(?::|-)(?:control-authority)\b/u, "legacy check script names");
 
   assertContainsAll("runbook/active.md", activeRunbookText, [
-    "standalone Agent Control repo",
+    "Agent Control repo",
     "runbook/current-priority.md",
     "policies/stop-lines.md",
     "policies/continuation-rules.md",
@@ -139,6 +165,14 @@ function main() {
     "logs/",
     "npm run check",
     "npm run check:agent-control",
+  ]);
+  assertHeadings("runbook/active.md", activeRunbookText, [
+    "## Run purpose",
+    "## Scope for this run",
+    "## Repo-specific constraints",
+    "## Instruction priority",
+    "## Verification rules",
+    "## Change discipline",
   ]);
   assertDoesNotMatch(
     "runbook/active.md",
@@ -152,15 +186,20 @@ function main() {
     "Make Agent Control",
     "## Current mission",
     "## Current run priority",
-    "## Current standalone baseline",
+    "## Current repo baseline",
     "npm run check:agent-control",
+  ]);
+  assertHeadings("runbook/current-priority.md", currentPriorityText, [
+    "## Current mission",
+    "## Current run priority",
+    "## Current repo baseline",
   ]);
   assertContainsNone("runbook/current-priority.md", currentPriorityText, [
     "C:\\Users\\",
   ]);
 
-  assertContainsAll("policies/stop-lines.md", stopLinesText, [
-    "## Current Standalone Migration Stop-Line",
+  assertHeadings("policies/stop-lines.md", stopLinesText, [
+    "## Current Repo Boundary Stop-Line",
     "## Current Scope Stop-Line",
     "## Current Loop Execution Stop-Line",
   ]);
@@ -168,7 +207,15 @@ function main() {
     "## Task selection policy",
     "## Required cycle framing",
     "## Run persistence rule",
+    "## Continuation stopping rule",
+    "Do not use a numeric continuation quota",
   ]);
+  assertDoesNotMatch(
+    "policies/continuation-rules.md",
+    continuationRulesText,
+    /\bat least 5 bounded cycles\b/u,
+    "numeric continuation quotas",
+  );
 
   assertContainsAll("policies/logging-rules.md", loggingRulesText, [
     "leave `implement.md` as a thin entrypoint only",
@@ -177,6 +224,12 @@ function main() {
     "templates/loop-run.md",
     "templates/handoff.md",
   ]);
+  assertHeadings("policies/logging-rules.md", loggingRulesText, [
+    "## Purpose",
+    "## Logging destinations",
+    "## Logging model",
+    "## Templates",
+  ]);
   assertDoesNotMatch(
     "policies/logging-rules.md",
     loggingRulesText,
@@ -184,9 +237,47 @@ function main() {
     "legacy nested workspace paths",
   );
 
+  assertContainsAll("templates/cycle-entry.md", cycleTemplateText, [
+    "# Cycle Entry Template",
+  ]);
+  assertLines("templates/cycle-entry.md", cycleTemplateText, [
+    "Cycle N",
+    "Chosen task:",
+    "Why it won:",
+    "Affected layer:",
+    "Owning lane:",
+    "Mission usefulness:",
+    "Proof path:",
+    "Rollback path:",
+    "Stop-line:",
+    "Files touched:",
+    "Verification run:",
+    "Result:",
+    "Next likely move:",
+    "Risks / notes:",
+  ]);
   assertContainsAll("templates/loop-run.md", loopTemplateText, [
+    "# Loop-Run Template",
     "npm run check:agent-control",
     "npm run check",
+  ]);
+  assertHeadings("templates/loop-run.md", loopTemplateText, [
+    "## Batched loop run YYYY-MM-X - short label",
+  ]);
+  assertLines("templates/loop-run.md", loopTemplateText, [
+    "Run scope:",
+    "Verified micro-fixes:",
+    "Verification run:",
+    "Stop summary:",
+  ]);
+  assertContainsAll("templates/handoff.md", handoffTemplateText, [
+    "# Handoff Template",
+  ]);
+  assertHeadings("templates/handoff.md", handoffTemplateText, [
+    "## Current state",
+    "## Completed in this run",
+    "## Next honest move",
+    "## Risks / notes",
   ]);
 
   assertContainsAll("logs/README.md", logsReadmeText, [
@@ -217,7 +308,9 @@ function main() {
           continuationRules: toRepoPath(CONTINUATION_RULES_PATH),
           loggingRules: toRepoPath(LOGGING_RULES_PATH),
           logsReadme: toRepoPath(LOGS_README_PATH),
+          cycleTemplate: toRepoPath(CYCLE_TEMPLATE_PATH),
           loopTemplate: toRepoPath(LOOP_TEMPLATE_PATH),
+          handoffTemplate: toRepoPath(HANDOFF_TEMPLATE_PATH),
         },
       },
       null,

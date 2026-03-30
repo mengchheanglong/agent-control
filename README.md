@@ -1,6 +1,6 @@
 # Agent Control
 
-Agent Control is a standalone repo for improving agent workflow, bounded loops, verification discipline, and handoff quality.
+Agent Control is a self-contained repo for improving agent workflow, bounded loops, verification discipline, and handoff quality.
 
 It is designed as a small operating surface rather than a framework: clear runbooks, explicit stop-lines, reusable templates, and a repo-local check that keeps the authority docs aligned.
 
@@ -24,7 +24,7 @@ It is designed as a small operating surface rather than a framework: clear runbo
 ## Checks
 
 - `npm run check`: validate the repo's authority surfaces
-- `npm run check:agent-control`: run the standalone authority check directly
+- `npm run check:agent-control`: run the authority check directly
 
 ## Publishing notes
 

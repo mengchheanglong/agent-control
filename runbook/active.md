@@ -2,7 +2,7 @@
 
 ## Run purpose
 
-This is the active runbook for autonomous work in this standalone Agent Control repo.
+This is the active runbook for autonomous work in this Agent Control repo.
 
 Before doing substantive work, the agent must:
 1. read `README.md`
@@ -41,7 +41,7 @@ Out of scope:
 
 The agent must preserve these truths while working:
 
-- this standalone repo is the product surface
+- this repo is the product surface
 - optimize for agent workflow usefulness, not framework breadth
 - keep loops bounded, explicit, and verifiable
 - do not couple active instructions to sibling repos or hidden home-directory layouts

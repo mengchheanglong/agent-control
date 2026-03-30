@@ -2,10 +2,10 @@
 
 ## Current mission
 
-Make Agent Control a reusable standalone surface for agent workflow, loop management, verification, and handoff discipline.
+Make Agent Control a reusable self-contained surface for agent workflow, loop management, verification, and handoff discipline.
 
 Prioritize work that makes the project more real and more reusable through:
-- clearer standalone boundaries
+- clearer repo boundaries
 - stronger loop selection and stop-line discipline
 - better proof, decision, and reporting flow
 - smaller, sharper verification seams
@@ -16,7 +16,7 @@ Prioritize work that makes the project more real and more reusable through:
 Choose the highest-ROI bounded next step from current repo truth.
 
 Prefer:
-1. standalone correctness or root-assumption fixes
+1. repo correctness or root-assumption fixes
 2. broken or missing workflow wiring
 3. missing proof, report, or validation coverage for real workflow pressure
 4. bounded improvements to loop selection, handoff, or logging surfaces
@@ -25,7 +25,7 @@ Prefer:
 
 Do not start broad new work when a smaller high-value continuation is clearly available.
 
-## Current standalone baseline
+## Current repo baseline
 
 Canonical surface:
 - this repo root

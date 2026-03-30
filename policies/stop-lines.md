@@ -1,6 +1,6 @@
 # Stop-Lines
 
-## Current Standalone Migration Stop-Line
+## Current Repo Boundary Stop-Line
 
 Allowed now:
 - root-relative docs and scripts
@@ -11,7 +11,7 @@ Explicitly not allowed now:
 - reintroducing a sibling workspace as a required parent
 - hardcoded hidden-workspace or sibling-root assumptions
 - treating archived logs as active instructions
-- compatibility shims that hide missing standalone structure instead of fixing it
+- compatibility shims that hide missing repo structure instead of fixing it
 
 Reopen criteria:
 - only reopen external-coupling work if a concrete integration requirement is identified and documented

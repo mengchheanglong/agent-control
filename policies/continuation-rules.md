@@ -60,9 +60,11 @@ Only stop when:
 - the next useful move would require a broad redesign
 - validation is blocked in a way that cannot be resolved safely
 
-## Minimum continuation target
+## Continuation stopping rule
 
-Aim to complete at least 5 bounded cycles before considering early stop, unless a true hard stop is reached.
+Continue through additional bounded cycles when current repo truth still shows a clear high-ROI next move.
+
+Do not use a numeric continuation quota as a reason to keep going or to stop.
 
 A true hard stop means:
 - no credible bounded high-ROI task remains
