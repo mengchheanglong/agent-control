@@ -35,7 +35,7 @@ Out of scope:
 - unrelated cleanup
 - generic framework expansion without workflow pressure
 - bundling several separate improvements into one cycle
-- treating imported historical material as current doctrine
+- treating archived material as current doctrine
 
 ## Repo-specific constraints
 
@@ -45,7 +45,7 @@ The agent must preserve these truths while working:
 - optimize for agent workflow usefulness, not framework breadth
 - keep loops bounded, explicit, and verifiable
 - do not couple active instructions to sibling repos or hidden home-directory layouts
-- do not turn imported historical logs into active doctrine
+- do not turn archived logs into active doctrine
 - do not drop decide, report, or handoff discipline
 - keep changes reversible, measurable, and evidence-based
 
