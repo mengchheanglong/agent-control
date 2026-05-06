@@ -17,9 +17,11 @@ const STOP_LINE_CARDS_PATH = path.join(ROOT, "policies", "stop-line-cards.json")
 const CONTINUATION_RULES_PATH = path.join(ROOT, "policies", "continuation-rules.md");
 const LOGGING_RULES_PATH = path.join(ROOT, "policies", "logging-rules.md");
 const LOGS_README_PATH = path.join(ROOT, "logs", "README.md");
+const MEMORY_README_PATH = path.join(ROOT, "memory", "README.md");
 const CYCLE_TEMPLATE_PATH = path.join(ROOT, "templates", "cycle-entry.md");
 const LOOP_TEMPLATE_PATH = path.join(ROOT, "templates", "loop-run.md");
 const HANDOFF_TEMPLATE_PATH = path.join(ROOT, "templates", "handoff.md");
+const PROJECT_MEMORY_TEMPLATE_PATH = path.join(ROOT, "templates", "project-memory.md");
 const CLI_PATH = path.join(ROOT, "scripts", "agent-control.mjs");
 const REUSE_CHECK_PATH = path.join(ROOT, "scripts", "check-reusable-install.mjs");
 const EXAMPLE_PATHS = [
@@ -28,6 +30,20 @@ const EXAMPLE_PATHS = [
   path.join(ROOT, "examples", "cycle-entry.too-broad.md"),
   path.join(ROOT, "examples", "handoff.good.md"),
   path.join(ROOT, "examples", "verification-failed.md"),
+  path.join(ROOT, "examples", "project-memory.good.md"),
+];
+const REQUIRED_MEMORY_HEADINGS = [
+  "# Project Memory",
+  "## Goal",
+  "## Project Shape",
+  "## Current Truth",
+  "## Active Constraints",
+  "## Decisions",
+  "## Suggestions Inbox",
+  "## Open Questions",
+  "## Next Best Move",
+  "## Proof Path",
+  "## Recent Changes",
 ];
 
 function readText(filePath) {
@@ -112,9 +128,11 @@ function main() {
   const continuationRulesText = readText(CONTINUATION_RULES_PATH);
   const loggingRulesText = readText(LOGGING_RULES_PATH);
   const logsReadmeText = readText(LOGS_README_PATH);
+  const memoryReadmeText = readText(MEMORY_README_PATH);
   const cycleTemplateText = readText(CYCLE_TEMPLATE_PATH);
   const loopTemplateText = readText(LOOP_TEMPLATE_PATH);
   const handoffTemplateText = readText(HANDOFF_TEMPLATE_PATH);
+  const projectMemoryTemplateText = readText(PROJECT_MEMORY_TEMPLATE_PATH);
   const cliText = readText(CLI_PATH);
   const reuseCheckText = readText(REUSE_CHECK_PATH);
   const exampleTexts = EXAMPLE_PATHS.map((examplePath) => [examplePath, readText(examplePath)]);
@@ -148,6 +166,7 @@ function main() {
     "npm run check:reusable",
     "npm run agent-control -- help",
     "npm run agent-control -- analyze-logs",
+    "npm run agent-control -- show-next --file examples/project-memory.good.md",
   ]);
   for (const surfacePaths of Object.values(manifest.surfaces)) {
     assert.ok(Array.isArray(surfacePaths), "authority.manifest.json surfaces must be path arrays");
@@ -168,10 +187,15 @@ function main() {
     "policies/stop-lines.md",
     "policies/continuation-rules.md",
     "policies/logging-rules.md",
+    "memory/",
+    "templates/project-memory.md",
     "logs/",
     "templates/",
     "examples/",
     "scripts/agent-control.mjs",
+    "init-memory",
+    "update-memory",
+    "show-next",
     "npm run check:agent-control",
     "npm run check:reusable",
   ]);
@@ -255,6 +279,10 @@ function main() {
     "policies/continuation-rules.md",
     "policies/logging-rules.md",
     "policies/stop-line-cards.json",
+    "memory/project.md",
+    "npm run agent-control -- init-memory",
+    "npm run agent-control -- update-memory",
+    "npm run agent-control -- show-next",
     "logs/",
     "npm run agent-control -- analyze-logs",
     "npm run check:reusable",
@@ -285,6 +313,7 @@ function main() {
     "## Current repo baseline",
     "npm run check:agent-control",
     "npm run check:reusable",
+    "memory/project.md",
   ]);
   assertHeadings("runbook/current-priority.md", currentPriorityText, [
     "## Current mission",
@@ -333,6 +362,7 @@ function main() {
   assertContainsAll("policies/logging-rules.md", loggingRulesText, [
     "leave `implement.md` as a thin entrypoint only",
     "logs/YYYY-MM/",
+    "memory/project.md",
     "npm run agent-control -- analyze-logs",
     "templates/cycle-entry.md",
     "templates/loop-run.md",
@@ -393,6 +423,22 @@ function main() {
     "## Next honest move",
     "## Risks / notes",
   ]);
+  assertContainsAll("templates/project-memory.md", projectMemoryTemplateText, [
+    "# Project Memory",
+    "The durable user goal",
+    "The single highest-ROI bounded task",
+  ]);
+  assertHeadings("templates/project-memory.md", projectMemoryTemplateText, REQUIRED_MEMORY_HEADINGS);
+
+  assertContainsAll("memory/README.md", memoryReadmeText, [
+    "# Project Memory",
+    "memory/project.md",
+    "compact operating state",
+    "Do not use project memory as a transcript",
+    "npm run agent-control -- init-memory",
+    "npm run agent-control -- update-memory",
+    "npm run agent-control -- show-next",
+  ]);
 
   assertContainsAll("logs/README.md", logsReadmeText, [
     "# Logs",
@@ -409,6 +455,11 @@ function main() {
 
   assertContainsAll("scripts/agent-control.mjs", cliText, [
     "#!/usr/bin/env node",
+    "init-memory",
+    "update-memory",
+    "show-memory",
+    "show-next",
+    "DEFAULT_MEMORY_PATH",
     "start-cycle",
     "close-cycle",
     "handoff",
@@ -457,6 +508,12 @@ function main() {
     "Failed.",
     "Do not claim",
   ]);
+  assertHeadings("examples/project-memory.good.md", exampleTexts[5][1], REQUIRED_MEMORY_HEADINGS);
+  assertContainsAll("examples/project-memory.good.md", exampleTexts[5][1], [
+    "curated operating state",
+    "Next Best Move",
+    "Proof Path",
+  ]);
 
   process.stdout.write(
     `${JSON.stringify(
@@ -477,9 +534,11 @@ function main() {
           continuationRules: toRepoPath(CONTINUATION_RULES_PATH),
           loggingRules: toRepoPath(LOGGING_RULES_PATH),
           logsReadme: toRepoPath(LOGS_README_PATH),
+          memoryReadme: toRepoPath(MEMORY_README_PATH),
           cycleTemplate: toRepoPath(CYCLE_TEMPLATE_PATH),
           loopTemplate: toRepoPath(LOOP_TEMPLATE_PATH),
           handoffTemplate: toRepoPath(HANDOFF_TEMPLATE_PATH),
+          projectMemoryTemplate: toRepoPath(PROJECT_MEMORY_TEMPLATE_PATH),
           cli: toRepoPath(CLI_PATH),
           reusableCheck: toRepoPath(REUSE_CHECK_PATH),
           examples: EXAMPLE_PATHS.map(toRepoPath),

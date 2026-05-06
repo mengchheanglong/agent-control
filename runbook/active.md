@@ -19,6 +19,7 @@ This runbook works with the other repo surfaces:
 - `policies/stop-line-cards.json` for structured lane constraints used by helpers
 - `policies/continuation-rules.md` for task selection and continuation rules
 - `policies/logging-rules.md` for logging and handoff rules
+- `memory/project.md` in imported projects for compact current operating state
 
 Historical logs do not belong here. They belong under `logs/`.
 
@@ -30,6 +31,7 @@ In scope:
 - stronger verification, reporting, and decision discipline
 - lightweight helper scripts and checks
 - structured authority metadata and lane cards when they keep docs and tooling aligned
+- project memory helpers that help imported agents retain goal, current truth, constraints, decisions, next move, and proof path
 - docs, templates, and code alignment when grounded in actual repo truth
 
 Out of scope:
@@ -99,6 +101,9 @@ If verification fails:
 Use `npm run agent-control -- help` to inspect available helper commands.
 
 Preferred helper uses:
+- initialize imported-project memory with `npm run agent-control -- init-memory`
+- update imported-project memory with `npm run agent-control -- update-memory`
+- inspect the next best move and proof path with `npm run agent-control -- show-next`
 - scaffold cycle records with `npm run agent-control -- start-cycle`
 - close cycle records with `npm run agent-control -- close-cycle`
 - create handoffs with `npm run agent-control -- handoff`
@@ -106,6 +111,8 @@ Preferred helper uses:
 - scan logs for recurring workflow failures with `npm run agent-control -- analyze-logs`
 
 Helpers do not replace judgment. They make proof, rollback, stop-line, and handoff fields harder to skip.
+
+Project memory is not a transcript. Update `memory/project.md` only with durable goal, current truth, active constraints, accepted decisions, useful suggestions, open questions, recent changes, next best move, and proof path.
 
 ## Change discipline
 

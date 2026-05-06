@@ -12,6 +12,8 @@ It is designed as a small operating surface rather than a framework: clear runbo
 - `runbook/`: live operating guidance and current priority
 - `policies/`: stable guardrails, continuation rules, logging rules, and stop-line cards
 - `templates/`: reusable cycle, loop-run, and handoff formats
+- `templates/project-memory.md`: compact project memory template for imported projects
+- `memory/`: guidance for keeping `memory/project.md` as active agent memory in imported projects
 - `examples/`: worked examples for good records, failed verification, and over-broad scope
 - `logs/`: optional run history for the project using this repo
 - `scripts/`: lightweight validation and operating helpers, including `scripts/agent-control.mjs`
@@ -28,6 +30,10 @@ It is designed as a small operating surface rather than a framework: clear runbo
 ## Operating helpers
 
 - `npm run agent-control -- help`: list available helper commands
+- `npm run agent-control -- init-memory`: create `memory/project.md` from the agent-oriented memory shape
+- `npm run agent-control -- update-memory`: add durable truth, decisions, suggestions, questions, recent changes, next move, and proof path
+- `npm run agent-control -- show-memory`: print the active project memory
+- `npm run agent-control -- show-next`: print the next best move, proof path, and active constraints from project memory
 - `npm run agent-control -- start-cycle`: scaffold a bounded cycle entry
 - `npm run agent-control -- close-cycle`: fill verification, result, next move, and risk fields in a cycle entry
 - `npm run agent-control -- handoff`: create a concise handoff record under `logs/YYYY-MM/`

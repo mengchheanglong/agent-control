@@ -10,6 +10,7 @@ Use:
 - `logs/` for completed cycle and loop-run history
 - `templates/` for reusable logging and handoff formats
 - `examples/` for calibration records that are not active doctrine
+- `memory/project.md` in imported projects for compact current operating state
 
 ## Logging destinations
 
@@ -18,6 +19,7 @@ Use:
 - leave `implement.md` as a thin entrypoint only
 - label archived material clearly when it is still useful to keep
 - use `npm run agent-control -- analyze-logs` to scan logs for missing fields, failed verification mentions, oversized-scope signals, and stale next moves
+- update `memory/project.md` after meaningful cycles with durable truth, accepted decisions, active constraints, useful suggestions, open questions, next best move, and proof path
 
 ## Logging model
 
@@ -41,3 +43,5 @@ Use these templates:
 - `templates/handoff.md`
 
 Helper commands may scaffold these records, but the templates remain the readable contract.
+
+Project memory uses `templates/project-memory.md`; it summarizes current state and should not duplicate completed cycle logs.

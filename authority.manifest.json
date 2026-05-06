@@ -30,7 +30,8 @@
     "templates": [
       "templates/cycle-entry.md",
       "templates/loop-run.md",
-      "templates/handoff.md"
+      "templates/handoff.md",
+      "templates/project-memory.md"
     ],
     "tools": [
       "scripts/agent-control.mjs",
@@ -42,7 +43,11 @@
       "examples/cycle-entry.good.md",
       "examples/cycle-entry.too-broad.md",
       "examples/handoff.good.md",
-      "examples/verification-failed.md"
+      "examples/verification-failed.md",
+      "examples/project-memory.good.md"
+    ],
+    "memory": [
+      "memory/README.md"
     ],
     "logs": [
       "logs/README.md"
@@ -53,7 +58,8 @@
     "npm run check:agent-control",
     "npm run check:reusable",
     "npm run agent-control -- help",
-    "npm run agent-control -- analyze-logs"
+    "npm run agent-control -- analyze-logs",
+    "npm run agent-control -- show-next --file examples/project-memory.good.md"
   ],
   "forbiddenDrift": [
     "sibling workspace required as the default root",

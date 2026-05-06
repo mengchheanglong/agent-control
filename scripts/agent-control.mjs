@@ -20,6 +20,23 @@ const REQUIRED_CYCLE_FIELDS = [
   "Next likely move:",
   "Risks / notes:",
 ];
+const DEFAULT_MEMORY_PATH = "memory/project.md";
+const MEMORY_SECTION_NAMES = [
+  "Goal",
+  "Project Shape",
+  "Current Truth",
+  "Active Constraints",
+  "Decisions",
+  "Suggestions Inbox",
+  "Open Questions",
+  "Next Best Move",
+  "Proof Path",
+  "Recent Changes",
+];
+const REQUIRED_MEMORY_HEADINGS = [
+  "# Project Memory",
+  ...MEMORY_SECTION_NAMES.map((sectionName) => `## ${sectionName}`),
+];
 
 function parseArgs(argv) {
   const args = {
@@ -73,6 +90,10 @@ function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(ROOT, relativePath), "utf8"));
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+}
+
 function stopLineIds() {
   return readJson("policies/stop-line-cards.json").cards.map((card) => card.id);
 }
@@ -89,12 +110,126 @@ function commandHelp() {
 
 Commands:
   help
+  init-memory --goal <text> [--project-shape <text>] [--current-truth <text>] [--constraints <text>] [--next <text>] [--proof <cmd>] [--output <path>] [--force]
+  update-memory [--file <path>] [--current-truth <text>] [--constraint <text>] [--decision <text>] [--suggestion <text>] [--open-question <text>] [--next <text>] [--proof <cmd>] [--recent-change <text>]
+  show-memory [--file <path>]
+  show-next [--file <path>]
   start-cycle --task <text> --lane <id> --why <text> --proof <cmd> --rollback <text> --stop-line <text> [--affected-layer <text>] [--mission <text>] [--output <path>]
   close-cycle --file <path> --result <text> --verification <cmd> --next <text> [--files-touched <text>] [--risks <text>]
   handoff --state <text> --completed <text> --next <text> [--risks <text>] [--output <path>]
   analyze-logs [--logs-dir <path>]
   stop-lines
 `);
+}
+
+function commandInitMemory(args) {
+  const outputPath = path.resolve(ROOT, args.output ?? DEFAULT_MEMORY_PATH);
+  if (fs.existsSync(outputPath) && !args.force) {
+    throw new Error(`${path.relative(ROOT, outputPath).replace(/\\/g, "/")} already exists; pass --force to replace it`);
+  }
+
+  const content = `# Project Memory
+
+## Goal
+
+${requireArg(args, "goal")}
+
+## Project Shape
+
+${args["project-shape"] ?? "TBD"}
+
+## Current Truth
+
+${formatMemoryList(args["current-truth"])}
+
+## Active Constraints
+
+${formatMemoryList(args.constraints)}
+
+## Decisions
+
+No accepted decisions recorded yet.
+
+## Suggestions Inbox
+
+No pending suggestions recorded yet.
+
+## Open Questions
+
+No open questions recorded yet.
+
+## Next Best Move
+
+${args.next ?? "TBD"}
+
+## Proof Path
+
+${args.proof ?? "TBD"}
+
+## Recent Changes
+
+No recent changes recorded yet.
+`;
+
+  ensureParent(outputPath);
+  fs.writeFileSync(outputPath, content);
+  process.stdout.write(`${path.relative(ROOT, outputPath).replace(/\\/g, "/")}\n`);
+}
+
+function commandUpdateMemory(args) {
+  const file = memoryPath(args);
+  const text = fs.readFileSync(file, "utf8");
+  validateMemoryText(args.file ?? DEFAULT_MEMORY_PATH, text);
+
+  let updated = text;
+  const appendOperations = [
+    ["Current Truth", args["current-truth"]],
+    ["Active Constraints", args.constraint],
+    ["Decisions", args.decision],
+    ["Suggestions Inbox", args.suggestion],
+    ["Open Questions", args["open-question"]],
+    ["Recent Changes", args["recent-change"]],
+  ];
+  const replaceOperations = [
+    ["Next Best Move", args.next],
+    ["Proof Path", args.proof],
+  ];
+
+  for (const [sectionName, value] of appendOperations) {
+    if (value) {
+      updated = appendMemorySection(updated, sectionName, value);
+    }
+  }
+
+  for (const [sectionName, value] of replaceOperations) {
+    if (value) {
+      updated = replaceMemorySection(updated, sectionName, value);
+    }
+  }
+
+  fs.writeFileSync(file, updated);
+  process.stdout.write(`${path.relative(ROOT, file).replace(/\\/g, "/")}\n`);
+}
+
+function commandShowMemory(args) {
+  const file = memoryPath(args);
+  const text = fs.readFileSync(file, "utf8");
+  validateMemoryText(args.file ?? DEFAULT_MEMORY_PATH, text);
+  process.stdout.write(text);
+}
+
+function commandShowNext(args) {
+  const file = memoryPath(args);
+  const text = fs.readFileSync(file, "utf8");
+  validateMemoryText(args.file ?? DEFAULT_MEMORY_PATH, text);
+  const report = {
+    ok: true,
+    file: path.relative(ROOT, file).replace(/\\/g, "/"),
+    nextBestMove: readMemorySection(text, "Next Best Move").trim(),
+    proofPath: readMemorySection(text, "Proof Path").trim(),
+    activeConstraints: readMemorySection(text, "Active Constraints").trim(),
+  };
+  process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
 }
 
 function commandStopLines() {
@@ -186,12 +321,52 @@ function commandCloseCycle(args) {
 }
 
 function replaceField(text, field, value) {
-  const fieldPattern = field.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const fieldPattern = escapeRegExp(field);
   const nextFieldPattern = REQUIRED_CYCLE_FIELDS.filter((candidate) => candidate !== field)
-    .map((candidate) => candidate.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&"))
+    .map((candidate) => escapeRegExp(candidate))
     .join("|");
   const pattern = new RegExp(`(${fieldPattern}\\n)([\\s\\S]*?)(?=\\n(?:${nextFieldPattern})|$)`, "u");
-  return text.replace(pattern, `$1${value.trim()}\n`);
+  return text.replace(pattern, (_match, heading) => `${heading}${value.trim()}\n`);
+}
+
+function memoryPath(args) {
+  return path.resolve(ROOT, args.file ?? DEFAULT_MEMORY_PATH);
+}
+
+function validateMemoryText(label, text) {
+  for (const heading of REQUIRED_MEMORY_HEADINGS) {
+    if (!new RegExp(`^${escapeRegExp(heading)}$`, "mu").test(text)) {
+      throw new Error(`${label} is missing required memory heading ${heading}`);
+    }
+  }
+}
+
+function formatMemoryList(value) {
+  return value ? `- ${value}` : "TBD";
+}
+
+function appendMemorySection(text, sectionName, value) {
+  const current = readMemorySection(text, sectionName).trim();
+  const replacement = isEmptyMemoryPlaceholder(current) ? `- ${value}` : `${current}\n- ${value}`;
+  return replaceMemorySection(text, sectionName, replacement);
+}
+
+function replaceMemorySection(text, sectionName, value) {
+  const pattern = memorySectionPattern(sectionName);
+  return text.replace(pattern, (_match, heading) => `${heading}${value.trim()}\n`);
+}
+
+function readMemorySection(text, sectionName) {
+  const match = text.match(memorySectionPattern(sectionName));
+  return match?.[2] ?? "";
+}
+
+function memorySectionPattern(sectionName) {
+  return new RegExp(`((?:^|\\n)## ${escapeRegExp(sectionName)}\\n\\n)([\\s\\S]*?)(?=\\n## [^\\n]+\\n|$)`, "u");
+}
+
+function isEmptyMemoryPlaceholder(value) {
+  return value === "TBD" || /^No .* recorded yet\.$/u.test(value);
 }
 
 function commandHandoff(args) {
@@ -291,6 +466,18 @@ function main() {
   switch (command) {
     case "help":
       commandHelp();
+      break;
+    case "init-memory":
+      commandInitMemory(args);
+      break;
+    case "update-memory":
+      commandUpdateMemory(args);
+      break;
+    case "show-memory":
+      commandShowMemory(args);
+      break;
+    case "show-next":
+      commandShowNext(args);
       break;
     case "start-cycle":
       commandStartCycle(args);

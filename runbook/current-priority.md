@@ -10,6 +10,7 @@ Prioritize work that makes the project more real and more reusable through:
 - better proof, decision, and reporting flow
 - smaller, sharper verification seams
 - executable helpers that preserve bounded workflow discipline without becoming a runtime
+- compact project memory that helps imported agents continue from current truth instead of long chat context
 - measurable, reversible progress
 
 ## Current run priority
@@ -21,9 +22,10 @@ Prefer:
 2. broken or missing workflow wiring
 3. missing proof, report, or validation coverage for real workflow pressure
 4. bounded improvements to loop selection, handoff, or logging surfaces
-5. lightweight helper tooling that removes friction without expanding scope
-6. worked examples or structured cards that make the operating standard easier to apply
-7. record correction only when it materially improves truth alignment
+5. compact memory surfaces that preserve goal, constraints, decisions, next move, and proof path
+6. lightweight helper tooling that removes friction without expanding scope
+7. worked examples or structured cards that make the operating standard easier to apply
+8. record correction only when it materially improves truth alignment
 
 Do not start broad new work when a smaller high-value continuation is clearly available.
 
@@ -40,3 +42,4 @@ Required baseline truths:
 - `npm run check:agent-control` should pass from this repo root
 - `npm run check:reusable` should prove the repo still works after copying to a temp directory
 - `policies/stop-line-cards.json` should stay aligned with `policies/stop-lines.md`
+- imported projects may keep active memory in `memory/project.md`, shaped by `templates/project-memory.md`
