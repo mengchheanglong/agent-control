@@ -211,13 +211,17 @@ function main() {
   assertManifest(manifest);
   assertPackage(packageJson);
 
-  assertContains("AGENTS.md", agentsText, ["README.md", "implement.md", "do not stop after cloning", "adoption protocol", "discovery bridge"]);
+  assertContains("AGENTS.md", agentsText, ["README.md", "implement.md", "do not stop after cloning", "adoption protocol", "agent-control/", "host `.gitignore`", "discovery bridge"]);
   assert.ok(countNonEmptyLines(agentsText) <= 8, "AGENTS.md must stay thin");
 
   assertContains("README.md", readmeText, [
     "self-contained repo",
     "agent-first",
+    "Copy This Prompt",
+    "Clone https://github.com/mengchheanglong/agent-control.git and follow its AGENTS.md.",
     "do not stop after cloning",
+    "agent-control/",
+    "host project's `.gitignore`",
     "Minimum post-clone sequence",
     "authority.manifest.json",
     "templates/project-memory.md",
@@ -234,7 +238,7 @@ function main() {
   assertContains("implement.md", implementText, ["Agent Control Entrypoint", PATHS.activeRunbook, PATHS.currentPriority]);
   assert.ok(countNonEmptyLines(implementText) <= 10, "implement.md must remain a thin entrypoint");
 
-  assertContains("runbook/active.md", activeRunbookText, ["agent-first", "do not stop at clone completion", "memory/project.md", "memory/state.json", "npm run agent-control -- show-next", "npm run check:reusable"]);
+  assertContains("runbook/active.md", activeRunbookText, ["agent-first", "do not stop at clone completion", "agent-control/", "host `.gitignore`", "memory/project.md", "memory/state.json", "npm run agent-control -- show-next", "npm run check:reusable"]);
   assertContains("runbook/current-priority.md", currentPriorityText, ["npm run check:reusable", "templates/project-memory.md", "memory/state.json"]);
   assertContains("policies/continuation-rules.md", continuationRulesText, ["stop-line card", "Do not use a numeric continuation quota"]);
   assertContains("policies/logging-rules.md", loggingRulesText, ["memory/project.md", "memory/state.json", "templates/project-memory.md"]);
@@ -255,6 +259,7 @@ function main() {
   assertContains("scripts/agent-control.mjs", cliText, [
     "#!/usr/bin/env node",
     "adoption-protocol",
+    "host .gitignore",
     "preflight",
     "bootstrap",
     "audit-memory",
@@ -286,6 +291,7 @@ function main() {
   assertContains("tests/agent-control.test.mjs", cliTestText, [
     "node:test",
     "adoption protocol is agent-first",
+    "agent-control/",
     "preflight",
     "bootstrap",
     "audit-memory",

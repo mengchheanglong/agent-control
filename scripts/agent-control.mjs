@@ -81,6 +81,7 @@ function commandAdoptionProtocol() {
     purpose: "Agent-first setup for importing Agent Control into an existing or new project.",
     agentSteps: [
       "Inspect the host project before writing memory: README, package/config files, source tree, scripts, tests, and local docs.",
+      "Add agent-control/ to the host .gitignore unless the user explicitly wants to vendor Agent Control; preserve existing ignore rules.",
       "Draft project context, project shape, current truth, constraints, proof path, and one bounded next move from observed evidence.",
       "Ask the user one optional question: Any priority, constraint, or direction you want future agents to remember?",
       "Merge user-provided context above inferred context when there is tension.",
@@ -89,7 +90,7 @@ function commandAdoptionProtocol() {
     userQuestion: "I inferred the project context and next useful direction. Any priority, constraint, or direction you want future agents to remember?",
     commandShape:
       'npm run agent-control -- bootstrap --context "<user-confirmed or inferred context>" --project-shape "<observed shape>" --current-truth "<verified fact>" --constraint "<important boundary>" --next "<bounded next move>" --proof "<check command>"',
-    rule: "The CLI records and validates; the AI agent does the project analysis.",
+    rule: "The CLI records and validates; the AI agent edits the host .gitignore and does the project analysis.",
   };
   process.stdout.write(`${JSON.stringify(protocol, null, 2)}\n`);
 }

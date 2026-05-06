@@ -4,6 +4,14 @@ Agent Control is a self-contained repo for improving agent workflow, bounded loo
 
 It is designed as an agent-first operating surface rather than a framework: clear runbooks, explicit stop-lines, reusable templates, and a repo-local check that keeps the authority docs aligned.
 
+## Copy This Prompt
+
+Use this short prompt in the host project:
+
+```text
+Clone https://github.com/mengchheanglong/agent-control.git and follow its AGENTS.md.
+```
+
 ## Agent-First Adoption
 
 If this repo has just been cloned or imported into a host project, do not stop after cloning.
@@ -16,10 +24,13 @@ I inferred the project context and next useful direction. Any priority, constrai
 
 Then the agent records the result with `bootstrap --context`. The CLI should stay non-interactive and dependency-free; the agent does the analysis.
 
+By default, add `agent-control/` to the host project's `.gitignore` after cloning. Do not overwrite existing ignore rules. Skip this only when the user explicitly wants to vendor Agent Control into the host repo.
+
 Minimum post-clone sequence:
 
 ```bash
 npm run agent-control -- adoption-protocol
+# from the host project root, add agent-control/ to .gitignore unless vendoring
 npm run agent-control -- bootstrap --context "..." --project-shape "..." --current-truth "..." --constraint "..." --next "..." --proof "..."
 npm run check
 ```

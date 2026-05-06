@@ -4,7 +4,7 @@
 
 Agent Control is a repo-local operating surface for bounded agent work. It is agent-first: the AI agent analyzes the host project, asks the user for optional extra context, and uses the CLI only to record and validate durable state.
 
-If this repo was just cloned or imported into a host project, do not stop at clone completion. Immediately run the adoption protocol, inspect the host project, ask the one optional context question, bootstrap memory, and run the checks.
+If this repo was just cloned or imported into a host project, do not stop at clone completion. Immediately run the adoption protocol, add `agent-control/` to the host `.gitignore` unless vendoring was explicitly requested, inspect the host project, ask the one optional context question, bootstrap memory, and run the checks.
 
 Before substantive work, read:
 1. `README.md`
