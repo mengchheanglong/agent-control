@@ -33,6 +33,7 @@ Before each cycle, determine and record:
 - proof path
 - rollback path
 - stop-line
+- owning stop-line card from `policies/stop-line-cards.json`
 
 Implement only up to the stop-line, even if more work is possible.
 

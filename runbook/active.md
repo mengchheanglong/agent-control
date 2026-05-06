@@ -16,6 +16,7 @@ Before doing substantive work, the agent must:
 This runbook works with the other repo surfaces:
 - `runbook/current-priority.md` for current mission focus and run priority
 - `policies/stop-lines.md` for active execution guardrails
+- `policies/stop-line-cards.json` for structured lane constraints used by helpers
 - `policies/continuation-rules.md` for task selection and continuation rules
 - `policies/logging-rules.md` for logging and handoff rules
 
@@ -28,6 +29,7 @@ In scope:
 - workflow, loop, and handoff improvements
 - stronger verification, reporting, and decision discipline
 - lightweight helper scripts and checks
+- structured authority metadata and lane cards when they keep docs and tooling aligned
 - docs, templates, and code alignment when grounded in actual repo truth
 
 Out of scope:
@@ -80,6 +82,8 @@ If relevant, use commands like:
 ```bash
 npm run check
 npm run check:agent-control
+npm run check:reusable
+npm run agent-control -- analyze-logs
 ```
 
 If the touched area has its own targeted check or report script, use that first.
@@ -89,6 +93,19 @@ If no adequate verification exists and the change truly needs it, add minimal fo
 If verification fails:
 - fix the bounded slice if practical
 - otherwise stop honestly at the failed boundary and record the issue clearly
+
+## Operating helpers
+
+Use `npm run agent-control -- help` to inspect available helper commands.
+
+Preferred helper uses:
+- scaffold cycle records with `npm run agent-control -- start-cycle`
+- close cycle records with `npm run agent-control -- close-cycle`
+- create handoffs with `npm run agent-control -- handoff`
+- inspect stop-line cards with `npm run agent-control -- stop-lines`
+- scan logs for recurring workflow failures with `npm run agent-control -- analyze-logs`
+
+Helpers do not replace judgment. They make proof, rollback, stop-line, and handoff fields harder to skip.
 
 ## Change discipline
 

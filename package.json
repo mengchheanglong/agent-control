@@ -4,12 +4,17 @@
   "private": true,
   "description": "Self-contained starter for agent workflow, bounded loops, verification, and handoff discipline.",
   "type": "module",
+  "bin": {
+    "agent-control": "scripts/agent-control.mjs"
+  },
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "check": "npm run check:agent-control",
-    "check:agent-control": "node scripts/check-agent-control-authority.mjs"
+    "check": "npm run check:agent-control && npm run check:reusable",
+    "check:agent-control": "node scripts/check-agent-control-authority.mjs",
+    "check:reusable": "node scripts/check-reusable-install.mjs",
+    "agent-control": "node scripts/agent-control.mjs"
   },
   "keywords": [
     "agents",

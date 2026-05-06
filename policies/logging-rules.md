@@ -9,6 +9,7 @@ Use:
 - `policies/` for stable execution rules
 - `logs/` for completed cycle and loop-run history
 - `templates/` for reusable logging and handoff formats
+- `examples/` for calibration records that are not active doctrine
 
 ## Logging destinations
 
@@ -16,6 +17,7 @@ Use:
 - keep active operating guidance out of historical log files
 - leave `implement.md` as a thin entrypoint only
 - label archived material clearly when it is still useful to keep
+- use `npm run agent-control -- analyze-logs` to scan logs for missing fields, failed verification mentions, oversized-scope signals, and stale next moves
 
 ## Logging model
 
@@ -37,3 +39,5 @@ Use these templates:
 - `templates/cycle-entry.md`
 - `templates/loop-run.md`
 - `templates/handoff.md`
+
+Helper commands may scaffold these records, but the templates remain the readable contract.

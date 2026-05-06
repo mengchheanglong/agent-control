@@ -9,6 +9,7 @@ Prioritize work that makes the project more real and more reusable through:
 - stronger loop selection and stop-line discipline
 - better proof, decision, and reporting flow
 - smaller, sharper verification seams
+- executable helpers that preserve bounded workflow discipline without becoming a runtime
 - measurable, reversible progress
 
 ## Current run priority
@@ -21,7 +22,8 @@ Prefer:
 3. missing proof, report, or validation coverage for real workflow pressure
 4. bounded improvements to loop selection, handoff, or logging surfaces
 5. lightweight helper tooling that removes friction without expanding scope
-6. record correction only when it materially improves truth alignment
+6. worked examples or structured cards that make the operating standard easier to apply
+7. record correction only when it materially improves truth alignment
 
 Do not start broad new work when a smaller high-value continuation is clearly available.
 
@@ -36,3 +38,5 @@ Required baseline truths:
 - current instructions must not require a sibling external repo to exist
 - current instructions must not require a tool-specific hidden workspace layout
 - `npm run check:agent-control` should pass from this repo root
+- `npm run check:reusable` should prove the repo still works after copying to a temp directory
+- `policies/stop-line-cards.json` should stay aligned with `policies/stop-lines.md`

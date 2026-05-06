@@ -1,5 +1,9 @@
 # Stop-Lines
 
+The structured companion to this file is `policies/stop-line-cards.json`.
+
+Use the cards when a helper or cycle record needs a machine-checkable owning lane. Use this markdown file for readable doctrine.
+
 ## Current Repo Boundary Stop-Line
 
 Allowed now:

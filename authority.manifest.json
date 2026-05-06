@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "name": "agent-control",
+  "purpose": "Self-contained operating surface for bounded agent workflow, verification discipline, stop-lines, logging, and handoff quality.",
+  "authorityOrder": [
+    "README.md",
+    "implement.md",
+    "runbook/active.md",
+    "runbook/current-priority.md",
+    "policies/stop-lines.md",
+    "policies/continuation-rules.md",
+    "policies/logging-rules.md"
+  ],
+  "surfaces": {
+    "entrypoints": [
+      "AGENTS.md",
+      "README.md",
+      "implement.md"
+    ],
+    "runbook": [
+      "runbook/active.md",
+      "runbook/current-priority.md"
+    ],
+    "policies": [
+      "policies/stop-lines.md",
+      "policies/continuation-rules.md",
+      "policies/logging-rules.md",
+      "policies/stop-line-cards.json"
+    ],
+    "templates": [
+      "templates/cycle-entry.md",
+      "templates/loop-run.md",
+      "templates/handoff.md"
+    ],
+    "tools": [
+      "scripts/agent-control.mjs",
+      "scripts/check-agent-control-authority.mjs",
+      "scripts/check-reusable-install.mjs"
+    ],
+    "examples": [
+      "examples/README.md",
+      "examples/cycle-entry.good.md",
+      "examples/cycle-entry.too-broad.md",
+      "examples/handoff.good.md",
+      "examples/verification-failed.md"
+    ],
+    "logs": [
+      "logs/README.md"
+    ]
+  },
+  "requiredCommands": [
+    "npm run check",
+    "npm run check:agent-control",
+    "npm run check:reusable",
+    "npm run agent-control -- help",
+    "npm run agent-control -- analyze-logs"
+  ],
+  "forbiddenDrift": [
+    "sibling workspace required as the default root",
+    "hidden home-directory workspace layout required",
+    "archived logs treated as active doctrine",
+    "numeric continuation quota",
+    "unbounded autonomous execution"
+  ]
+}

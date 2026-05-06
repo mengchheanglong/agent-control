@@ -5,22 +5,38 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+const AGENTS_PATH = path.join(ROOT, "AGENTS.md");
+const MANIFEST_PATH = path.join(ROOT, "authority.manifest.json");
 const README_PATH = path.join(ROOT, "README.md");
 const IMPLEMENT_PATH = path.join(ROOT, "implement.md");
 const PACKAGE_JSON_PATH = path.join(ROOT, "package.json");
 const ACTIVE_RUNBOOK_PATH = path.join(ROOT, "runbook", "active.md");
 const CURRENT_PRIORITY_PATH = path.join(ROOT, "runbook", "current-priority.md");
 const STOP_LINES_PATH = path.join(ROOT, "policies", "stop-lines.md");
+const STOP_LINE_CARDS_PATH = path.join(ROOT, "policies", "stop-line-cards.json");
 const CONTINUATION_RULES_PATH = path.join(ROOT, "policies", "continuation-rules.md");
 const LOGGING_RULES_PATH = path.join(ROOT, "policies", "logging-rules.md");
 const LOGS_README_PATH = path.join(ROOT, "logs", "README.md");
 const CYCLE_TEMPLATE_PATH = path.join(ROOT, "templates", "cycle-entry.md");
 const LOOP_TEMPLATE_PATH = path.join(ROOT, "templates", "loop-run.md");
 const HANDOFF_TEMPLATE_PATH = path.join(ROOT, "templates", "handoff.md");
+const CLI_PATH = path.join(ROOT, "scripts", "agent-control.mjs");
+const REUSE_CHECK_PATH = path.join(ROOT, "scripts", "check-reusable-install.mjs");
+const EXAMPLE_PATHS = [
+  path.join(ROOT, "examples", "README.md"),
+  path.join(ROOT, "examples", "cycle-entry.good.md"),
+  path.join(ROOT, "examples", "cycle-entry.too-broad.md"),
+  path.join(ROOT, "examples", "handoff.good.md"),
+  path.join(ROOT, "examples", "verification-failed.md"),
+];
 
 function readText(filePath) {
   assert.ok(fs.existsSync(filePath), `Missing Agent Control authority surface: ${filePath}`);
   return fs.readFileSync(filePath, "utf8");
+}
+
+function readJson(filePath) {
+  return JSON.parse(readText(filePath));
 }
 
 function assertContainsAll(label, text, requiredSnippets) {
@@ -51,6 +67,17 @@ function assertLines(label, text, requiredLines) {
   }
 }
 
+function assertArrayIncludesAll(label, values, requiredValues) {
+  assert.ok(Array.isArray(values), `${label} must be an array`);
+  for (const requiredValue of requiredValues) {
+    assert.ok(values.includes(requiredValue), `${label} is missing required value: ${requiredValue}`);
+  }
+}
+
+function assertRepoPathExists(repoPath) {
+  assert.ok(fs.existsSync(path.join(ROOT, repoPath)), `Manifest references missing repo path: ${repoPath}`);
+}
+
 function countLinesMatching(text, pattern) {
   return text
     .split(/\r?\n/u)
@@ -72,6 +99,8 @@ function escapeRegExp(value) {
 }
 
 function main() {
+  const agentsText = readText(AGENTS_PATH);
+  const manifest = readJson(MANIFEST_PATH);
   const readmeText = readText(README_PATH);
   const implementText = readText(IMPLEMENT_PATH);
   const packageJsonText = readText(PACKAGE_JSON_PATH);
@@ -79,29 +108,77 @@ function main() {
   const activeRunbookText = readText(ACTIVE_RUNBOOK_PATH);
   const currentPriorityText = readText(CURRENT_PRIORITY_PATH);
   const stopLinesText = readText(STOP_LINES_PATH);
+  const stopLineCards = readJson(STOP_LINE_CARDS_PATH);
   const continuationRulesText = readText(CONTINUATION_RULES_PATH);
   const loggingRulesText = readText(LOGGING_RULES_PATH);
   const logsReadmeText = readText(LOGS_README_PATH);
   const cycleTemplateText = readText(CYCLE_TEMPLATE_PATH);
   const loopTemplateText = readText(LOOP_TEMPLATE_PATH);
   const handoffTemplateText = readText(HANDOFF_TEMPLATE_PATH);
+  const cliText = readText(CLI_PATH);
+  const reuseCheckText = readText(REUSE_CHECK_PATH);
+  const exampleTexts = EXAMPLE_PATHS.map((examplePath) => [examplePath, readText(examplePath)]);
 
-  assertContainsAll("README.md", readmeText, [
-    "# Agent Control",
-    "self-contained repo",
+  assertContainsAll("AGENTS.md", agentsText, [
+    "# Agent Control Instructions",
+    "README.md",
+    "implement.md",
+    "discovery bridge",
+    "Do not duplicate runbook or policy doctrine here.",
+  ]);
+  assert.ok(
+    countNonEmptyLines(agentsText) <= 6,
+    "AGENTS.md must stay a thin discovery bridge instead of becoming another authority surface",
+  );
+
+  assert.equal(manifest.schemaVersion, 1, "authority.manifest.json must keep schemaVersion 1");
+  assert.equal(manifest.name, "agent-control", "authority.manifest.json must identify agent-control");
+  assertArrayIncludesAll("authority.manifest.json authorityOrder", manifest.authorityOrder, [
+    "README.md",
     "implement.md",
     "runbook/active.md",
     "runbook/current-priority.md",
     "policies/stop-lines.md",
     "policies/continuation-rules.md",
     "policies/logging-rules.md",
+  ]);
+  assertArrayIncludesAll("authority.manifest.json requiredCommands", manifest.requiredCommands, [
+    "npm run check",
+    "npm run check:agent-control",
+    "npm run check:reusable",
+    "npm run agent-control -- help",
+    "npm run agent-control -- analyze-logs",
+  ]);
+  for (const surfacePaths of Object.values(manifest.surfaces)) {
+    assert.ok(Array.isArray(surfacePaths), "authority.manifest.json surfaces must be path arrays");
+    for (const repoPath of surfacePaths) {
+      assertRepoPathExists(repoPath);
+    }
+  }
+
+  assertContainsAll("README.md", readmeText, [
+    "# Agent Control",
+    "self-contained repo",
+    "AGENTS.md",
+    "authority.manifest.json",
+    "implement.md",
+    "runbook/active.md",
+    "runbook/current-priority.md",
+    "policies/stop-line-cards.json",
+    "policies/stop-lines.md",
+    "policies/continuation-rules.md",
+    "policies/logging-rules.md",
     "logs/",
     "templates/",
+    "examples/",
+    "scripts/agent-control.mjs",
     "npm run check:agent-control",
+    "npm run check:reusable",
   ]);
   assertHeadings("README.md", readmeText, [
     "## What lives here",
     "## Quick start",
+    "## Operating helpers",
     "## Checks",
     "## Publishing notes",
   ]);
@@ -146,13 +223,28 @@ function main() {
   assert.equal(packageJson.name, "agent-control", "package.json must keep the agent-control package name");
   assert.equal(
     packageJson.scripts?.check,
-    "npm run check:agent-control",
-    "package.json must wire the main check script to check:agent-control",
+    "npm run check:agent-control && npm run check:reusable",
+    "package.json must wire the main check script to authority and reusable checks",
   );
   assert.equal(
     packageJson.scripts?.["check:agent-control"],
     "node scripts/check-agent-control-authority.mjs",
     "package.json must point check:agent-control at the repo-shape checker",
+  );
+  assert.equal(
+    packageJson.scripts?.["check:reusable"],
+    "node scripts/check-reusable-install.mjs",
+    "package.json must expose the reusable install check",
+  );
+  assert.equal(
+    packageJson.scripts?.["agent-control"],
+    "node scripts/agent-control.mjs",
+    "package.json must expose the Agent Control CLI",
+  );
+  assert.equal(
+    packageJson.bin?.["agent-control"],
+    "scripts/agent-control.mjs",
+    "package.json must expose an agent-control bin entry",
   );
   assertDoesNotMatch("package.json", packageJsonText, /\bcheck(?::|-)(?:control-authority)\b/u, "legacy check script names");
 
@@ -162,7 +254,10 @@ function main() {
     "policies/stop-lines.md",
     "policies/continuation-rules.md",
     "policies/logging-rules.md",
+    "policies/stop-line-cards.json",
     "logs/",
+    "npm run agent-control -- analyze-logs",
+    "npm run check:reusable",
     "npm run check",
     "npm run check:agent-control",
   ]);
@@ -172,6 +267,7 @@ function main() {
     "## Repo-specific constraints",
     "## Instruction priority",
     "## Verification rules",
+    "## Operating helpers",
     "## Change discipline",
   ]);
   assertDoesNotMatch(
@@ -188,6 +284,7 @@ function main() {
     "## Current run priority",
     "## Current repo baseline",
     "npm run check:agent-control",
+    "npm run check:reusable",
   ]);
   assertHeadings("runbook/current-priority.md", currentPriorityText, [
     "## Current mission",
@@ -203,9 +300,25 @@ function main() {
     "## Current Scope Stop-Line",
     "## Current Loop Execution Stop-Line",
   ]);
+  assert.equal(stopLineCards.schemaVersion, 1, "policies/stop-line-cards.json must keep schemaVersion 1");
+  assert.equal(stopLineCards.cards.length, 3, "policies/stop-line-cards.json must define the three current stop-lines");
+  assertArrayIncludesAll(
+    "policies/stop-line-cards.json ids",
+    stopLineCards.cards.map((card) => card.id),
+    ["repo-boundary", "scope", "loop-execution"],
+  );
+  for (const card of stopLineCards.cards) {
+    assert.match(stopLinesText, new RegExp(`^## ${escapeRegExp(card.title)}$`, "mu"), `stop-line card ${card.id} must match a markdown heading`);
+    assert.ok(card.allowed.length > 0, `stop-line card ${card.id} must have allowed entries`);
+    assert.ok(card.forbidden.length > 0, `stop-line card ${card.id} must have forbidden entries`);
+    assert.ok(card.proofPath.length > 0, `stop-line card ${card.id} must have a proof path`);
+    assert.ok(card.rollbackPath, `stop-line card ${card.id} must have a rollback path`);
+    assert.ok(card.reopenCriteria, `stop-line card ${card.id} must have reopen criteria`);
+  }
   assertContainsAll("policies/continuation-rules.md", continuationRulesText, [
     "## Task selection policy",
     "## Required cycle framing",
+    "stop-line card",
     "## Run persistence rule",
     "## Continuation stopping rule",
     "Do not use a numeric continuation quota",
@@ -220,6 +333,7 @@ function main() {
   assertContainsAll("policies/logging-rules.md", loggingRulesText, [
     "leave `implement.md` as a thin entrypoint only",
     "logs/YYYY-MM/",
+    "npm run agent-control -- analyze-logs",
     "templates/cycle-entry.md",
     "templates/loop-run.md",
     "templates/handoff.md",
@@ -283,6 +397,7 @@ function main() {
   assertContainsAll("logs/README.md", logsReadmeText, [
     "# Logs",
     "logs/YYYY-MM/",
+    "npm run agent-control -- analyze-logs",
     "Keep this folder clean when publishing templates or starter material.",
   ]);
   assertDoesNotMatch(
@@ -292,11 +407,64 @@ function main() {
     "legacy nested workspace paths",
   );
 
+  assertContainsAll("scripts/agent-control.mjs", cliText, [
+    "#!/usr/bin/env node",
+    "start-cycle",
+    "close-cycle",
+    "handoff",
+    "analyze-logs",
+    "stop-lines",
+    "policies/stop-line-cards.json",
+  ]);
+  assertContainsAll("scripts/check-reusable-install.mjs", reuseCheckText, [
+    "fs.cpSync",
+    "npm",
+    "check:agent-control",
+    ".git",
+    "node_modules",
+  ]);
+  for (const [examplePath, exampleText] of exampleTexts) {
+    assertDoesNotMatch(
+      toRepoPath(examplePath),
+      exampleText,
+      /\b[a-z0-9-]+\/(?:runbook|policies|logs|templates)\//u,
+      "legacy nested workspace paths",
+    );
+  }
+  assertContainsAll("examples/README.md", exampleTexts[0][1], [
+    "These examples show the operating standard without becoming active doctrine.",
+    "Use `runbook/` and `policies/` for current authority.",
+  ]);
+  assertContainsAll("examples/cycle-entry.good.md", exampleTexts[1][1], [
+    "Proof path:",
+    "Rollback path:",
+    "Stop-line:",
+    "Passed.",
+  ]);
+  assertContainsAll("examples/cycle-entry.too-broad.md", exampleTexts[2][1], [
+    "Why it is flawed:",
+    "crosses the current scope stop-line",
+    "Better bounded replacement:",
+  ]);
+  assertContainsAll("examples/handoff.good.md", exampleTexts[3][1], [
+    "## Current state",
+    "## Completed in this run",
+    "## Next honest move",
+    "## Risks / notes",
+  ]);
+  assertContainsAll("examples/verification-failed.md", exampleTexts[4][1], [
+    "Verification run:",
+    "Failed.",
+    "Do not claim",
+  ]);
+
   process.stdout.write(
     `${JSON.stringify(
       {
         ok: true,
         checked: {
+          agents: toRepoPath(AGENTS_PATH),
+          manifest: toRepoPath(MANIFEST_PATH),
           readme: toRepoPath(README_PATH),
           implement: toRepoPath(IMPLEMENT_PATH),
           packageJson: toRepoPath(PACKAGE_JSON_PATH),
@@ -305,12 +473,16 @@ function main() {
           activeRunbook: toRepoPath(ACTIVE_RUNBOOK_PATH),
           currentPriority: toRepoPath(CURRENT_PRIORITY_PATH),
           stopLines: toRepoPath(STOP_LINES_PATH),
+          stopLineCards: toRepoPath(STOP_LINE_CARDS_PATH),
           continuationRules: toRepoPath(CONTINUATION_RULES_PATH),
           loggingRules: toRepoPath(LOGGING_RULES_PATH),
           logsReadme: toRepoPath(LOGS_README_PATH),
           cycleTemplate: toRepoPath(CYCLE_TEMPLATE_PATH),
           loopTemplate: toRepoPath(LOOP_TEMPLATE_PATH),
           handoffTemplate: toRepoPath(HANDOFF_TEMPLATE_PATH),
+          cli: toRepoPath(CLI_PATH),
+          reusableCheck: toRepoPath(REUSE_CHECK_PATH),
+          examples: EXAMPLE_PATHS.map(toRepoPath),
         },
       },
       null,
