@@ -15,7 +15,8 @@
     "entrypoints": [
       "AGENTS.md",
       "README.md",
-      "implement.md"
+      "implement.md",
+      "package.json"
     ],
     "runbook": [
       "runbook/active.md",
@@ -35,16 +36,13 @@
     ],
     "tools": [
       "scripts/agent-control.mjs",
+      "scripts/lib/agent-control-core.mjs",
+      "scripts/lib/memory-core.mjs",
       "scripts/check-agent-control-authority.mjs",
       "scripts/check-reusable-install.mjs"
     ],
-    "examples": [
-      "examples/README.md",
-      "examples/cycle-entry.good.md",
-      "examples/cycle-entry.too-broad.md",
-      "examples/handoff.good.md",
-      "examples/verification-failed.md",
-      "examples/project-memory.good.md"
+    "tests": [
+      "tests/agent-control.test.mjs"
     ],
     "memory": [
       "memory/README.md"
@@ -57,9 +55,16 @@
     "npm run check",
     "npm run check:agent-control",
     "npm run check:reusable",
+    "npm test",
+    "npm run preflight",
     "npm run agent-control -- help",
+    "npm run agent-control -- adoption-protocol",
+    "npm run agent-control -- preflight --file templates/project-memory.md",
+    "npm run agent-control -- audit-memory --file templates/project-memory.md",
+    "npm run agent-control -- score-next --file templates/project-memory.md",
+    "npm run agent-control -- render-stop-lines --check",
     "npm run agent-control -- analyze-logs",
-    "npm run agent-control -- show-next --file examples/project-memory.good.md"
+    "npm run agent-control -- show-next --file templates/project-memory.md"
   ],
   "forbiddenDrift": [
     "sibling workspace required as the default root",

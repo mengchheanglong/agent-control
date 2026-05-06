@@ -1,133 +1,87 @@
 # Active Runbook
 
-## Run purpose
+## Run Purpose
 
-This is the active runbook for autonomous work in this Agent Control repo.
+Agent Control is a repo-local operating surface for bounded agent work. It is agent-first: the AI agent analyzes the host project, asks the user for optional extra context, and uses the CLI only to record and validate durable state.
 
-Before doing substantive work, the agent must:
-1. read `README.md`
-2. read `implement.md`
-3. read `runbook/active.md`
-4. read `runbook/current-priority.md`
-5. read the relevant files under `policies/`
-6. refresh current repo truth from code and records
-7. then proceed in bounded verified cycles
+If this repo was just cloned or imported into a host project, do not stop at clone completion. Immediately run the adoption protocol, inspect the host project, ask the one optional context question, bootstrap memory, and run the checks.
 
-This runbook works with the other repo surfaces:
-- `runbook/current-priority.md` for current mission focus and run priority
-- `policies/stop-lines.md` for active execution guardrails
-- `policies/stop-line-cards.json` for structured lane constraints used by helpers
-- `policies/continuation-rules.md` for task selection and continuation rules
-- `policies/logging-rules.md` for logging and handoff rules
-- `memory/project.md` in imported projects for compact current operating state
+Before substantive work, read:
+1. `README.md`
+2. `implement.md`
+3. `runbook/active.md`
+4. `runbook/current-priority.md`
+5. relevant files under `policies/`
 
-Historical logs do not belong here. They belong under `logs/`.
+Then refresh repo truth from code and records before changing anything.
 
-## Scope for this run
+## Scope
 
 In scope:
-- bounded, reversible, measurable changes
-- workflow, loop, and handoff improvements
-- stronger verification, reporting, and decision discipline
-- lightweight helper scripts and checks
-- structured authority metadata and lane cards when they keep docs and tooling aligned
-- project memory helpers that help imported agents retain goal, current truth, constraints, decisions, next move, and proof path
-- docs, templates, and code alignment when grounded in actual repo truth
+- bounded workflow, loop, verification, memory, logging, and handoff helpers
+- docs, templates, cards, and scripts that keep those helpers aligned
+- project memory via `memory/project.md` in imported projects
+- generated context capsule via `memory/state.json` for tools that need stable state
+- agent-first adoption where inferred project context is checked with one optional user question
 
 Out of scope:
-- broad speculative platform redesign
-- unrelated cleanup
-- generic framework expansion without workflow pressure
-- bundling several separate improvements into one cycle
-- treating archived material as current doctrine
+- full agent runtimes or orchestrators
+- hidden loops or unbounded automation
+- sibling-repo or hidden workspace assumptions
+- treating archived logs as current doctrine
 
-## Repo-specific constraints
+## Instruction Priority
 
-The agent must preserve these truths while working:
-
-- this repo is the product surface
-- optimize for agent workflow usefulness, not framework breadth
-- keep loops bounded, explicit, and verifiable
-- do not couple active instructions to sibling repos or hidden home-directory layouts
-- do not turn archived logs into active doctrine
-- do not drop decide, report, or handoff discipline
-- keep changes reversible, measurable, and evidence-based
-
-If work touches doctrine-sensitive areas, prefer the smallest change that increases real operating value.
-
-## Instruction priority
-
-When instructions conflict, use this order:
-1. direct user instruction in the current session
+Use this order:
+1. current user instruction
 2. `README.md`
 3. `implement.md`
 4. `runbook/active.md`
-5. nearest local docs for the touched area
-6. code truth and established repo patterns
+5. nearest local docs
+6. code truth
 
-If uncertainty remains, inspect more before changing code.
-
-## Verification rules
+## Verification
 
 Never claim success without evidence.
 
-Use the strongest practical verification available for the touched area, preferring:
-1. targeted checks for the changed behavior
-2. existing workflow checks
-3. targeted tests
-4. broader repo validation if needed
-
-Prefer targeted verification before broad noisy validation.
-
-If relevant, use commands like:
+Prefer targeted checks first, then broader validation:
 
 ```bash
 npm run check
+npm run preflight
 npm run check:agent-control
 npm run check:reusable
 npm run agent-control -- analyze-logs
 ```
 
-If the touched area has its own targeted check or report script, use that first.
+If verification fails, fix the bounded slice if practical. Otherwise stop and report the failed boundary.
 
-If no adequate verification exists and the change truly needs it, add minimal focused verification rather than broad test scaffolding.
+## Operating Helpers
 
-If verification fails:
-- fix the bounded slice if practical
-- otherwise stop honestly at the failed boundary and record the issue clearly
+- `npm run agent-control -- update-memory`: update durable memory state
+- `npm run agent-control -- bootstrap`: create memory and state capsule for first import
+- `npm run agent-control -- adoption-protocol`: print the import protocol for agents
+- `npm run agent-control -- preflight`: gate generated policy alignment and memory quality
+- `npm run agent-control -- memory-state`: inspect memory as structured JSON
+- `npm run agent-control -- sync-state`: refresh `memory/state.json`
+- `npm run agent-control -- show-next`: inspect next move and proof path
+- `npm run agent-control -- score-next`: compare candidate next moves
+- `npm run agent-control -- audit-memory`: check memory quality before continuing
+- `npm run agent-control -- compact-memory`: prune stale memory list entries
+- `npm run agent-control -- start-cycle`: scaffold a cycle record
+- `npm run agent-control -- close-cycle`: close a cycle record with proof/result
+- `npm run agent-control -- handoff`: create a handoff under `logs/`
+- `npm run agent-control -- stop-lines`: inspect stop-line cards
+- `npm run agent-control -- render-stop-lines`: regenerate stop-line Markdown from cards
+- `npm run agent-control -- analyze-logs`: scan historical logs
+- `npm run agent-control -- pack`: emit a minimal import copy under `dist/`
 
-## Operating helpers
+Helpers enforce fields and paths. They do not replace judgment.
 
-Use `npm run agent-control -- help` to inspect available helper commands.
+## Change Discipline
 
-Preferred helper uses:
-- initialize imported-project memory with `npm run agent-control -- init-memory`
-- update imported-project memory with `npm run agent-control -- update-memory`
-- inspect the next best move and proof path with `npm run agent-control -- show-next`
-- scaffold cycle records with `npm run agent-control -- start-cycle`
-- close cycle records with `npm run agent-control -- close-cycle`
-- create handoffs with `npm run agent-control -- handoff`
-- inspect stop-line cards with `npm run agent-control -- stop-lines`
-- scan logs for recurring workflow failures with `npm run agent-control -- analyze-logs`
+Keep edits minimal, coherent, reversible, and evidence-based.
 
-Helpers do not replace judgment. They make proof, rollback, stop-line, and handoff fields harder to skip.
+Do not silently broaden scope, redesign adjacent systems, mutate unrelated records, or create drift between instructions, templates, cards, and code.
 
-Project memory is not a transcript. Update `memory/project.md` only with durable goal, current truth, active constraints, accepted decisions, useful suggestions, open questions, recent changes, next best move, and proof path.
-
-## Change discipline
-
-Keep edits:
-- minimal
-- coherent
-- reversible
-- evidence-based
-
-Rules:
-- do not silently redesign adjacent systems
-- do not broaden scope just because a nearby cleanup is tempting
-- do not make records claim more than code truth supports
-- do not move parked work unless clearly justified by current repo truth
-- do not treat partial work as completed work
-- do not create drift between instructions, templates, and actual behavior
-
-When touching records, reports, or handoff files, ensure they reflect actual implementation truth.
+Project memory is not a transcript. Store only durable project context, current truth, constraints, decisions, suggestions, questions, recent changes, next best move, and proof path. Regenerate `memory/state.json` when tools need a compact machine-readable context capsule.

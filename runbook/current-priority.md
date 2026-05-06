@@ -1,45 +1,30 @@
 # Current Priority
 
-## Current mission
+## Current Mission
 
-Make Agent Control a reusable self-contained surface for agent workflow, loop management, verification, and handoff discipline.
+Make Agent Control a reusable, self-contained surface for agent workflow, loop management, verification, memory, and handoff discipline.
 
-Prioritize work that makes the project more real and more reusable through:
-- clearer repo boundaries
-- stronger loop selection and stop-line discipline
-- better proof, decision, and reporting flow
-- smaller, sharper verification seams
-- executable helpers that preserve bounded workflow discipline without becoming a runtime
-- compact project memory that helps imported agents continue from current truth instead of long chat context
-- measurable, reversible progress
+## Current Run Priority
 
-## Current run priority
-
-Choose the highest-ROI bounded next step from current repo truth.
-
-Prefer:
+Prefer the highest-ROI bounded step from current repo truth:
 1. repo correctness or root-assumption fixes
-2. broken or missing workflow wiring
-3. missing proof, report, or validation coverage for real workflow pressure
-4. bounded improvements to loop selection, handoff, or logging surfaces
-5. compact memory surfaces that preserve goal, constraints, decisions, next move, and proof path
-6. lightweight helper tooling that removes friction without expanding scope
-7. worked examples or structured cards that make the operating standard easier to apply
-8. record correction only when it materially improves truth alignment
+2. broken workflow wiring
+3. missing proof or validation coverage
+4. loop selection, handoff, logging, or memory improvements
+5. lightweight helper tooling
+6. structured cards, context capsules, or templates that clarify operation
+7. truth-alignment record corrections
 
-Do not start broad new work when a smaller high-value continuation is clearly available.
+Avoid broad redesign when a smaller verified step is available.
 
-## Current repo baseline
+## Current Repo Baseline
 
-Canonical surface:
-- this repo root
-
-Required baseline truths:
-- active docs and scripts must use repo-root-relative paths
-- material under `logs/` is archival context, not current doctrine
-- current instructions must not require a sibling external repo to exist
-- current instructions must not require a tool-specific hidden workspace layout
-- `npm run check:agent-control` should pass from this repo root
-- `npm run check:reusable` should prove the repo still works after copying to a temp directory
-- `policies/stop-line-cards.json` should stay aligned with `policies/stop-lines.md`
+- this repo root is the canonical surface
+- active docs and scripts use repo-root-relative paths
+- `logs/` is archival, not active doctrine
+- no sibling repo or hidden workspace layout is required
+- `npm run check:agent-control` should pass here
+- `npm run check:reusable` should pass when release-style reuse proof is needed
+- `policies/stop-line-cards.json` stays aligned with `policies/stop-lines.md`
 - imported projects may keep active memory in `memory/project.md`, shaped by `templates/project-memory.md`
+- imported projects should be bootstrapped by an AI agent that infers project context, asks one optional user question, and generates `memory/state.json` from project memory

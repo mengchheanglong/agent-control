@@ -1,60 +1,27 @@
 # Stop-Lines
 
-The structured companion to this file is `policies/stop-line-cards.json`.
+Generated from `policies/stop-line-cards.json`.
 
-Use the cards when a helper or cycle record needs a machine-checkable owning lane. Use this markdown file for readable doctrine.
+Do not hand-edit duplicated policy prose here. Update the card JSON, then run:
+
+```bash
+npm run agent-control -- render-stop-lines
+```
 
 ## Current Repo Boundary Stop-Line
 
-Allowed now:
-- root-relative docs and scripts
-- minimal package and check scaffolding
-- bounded cleanup that removes parent-workspace assumptions
+Card id: `repo-boundary`
 
-Explicitly not allowed now:
-- reintroducing a sibling workspace as a required parent
-- hardcoded hidden-workspace or sibling-root assumptions
-- treating archived logs as active instructions
-- compatibility shims that hide missing repo structure instead of fixing it
-
-Reopen criteria:
-- only reopen external-coupling work if a concrete integration requirement is identified and documented
-- keep the default repo self-contained
-
-Anti-drift warning:
-- future docs and scripts must treat this repo as its own root
-- historical references must be labeled as historical context, not active truth
+Use `npm run agent-control -- stop-lines` for allowed work, forbidden work, proof path, rollback path, and reopen criteria.
 
 ## Current Scope Stop-Line
 
-Allowed now:
-- workflow and loop control surfaces
-- verification and reporting improvements
-- templates, handoff discipline, and small helper scripts
+Card id: `scope`
 
-Explicitly not allowed now:
-- building a full agent runtime or orchestrator inside this repo
-- speculative multi-service architecture
-- unrelated product features
-- broad redesign without bounded proof
-
-Reopen criteria:
-- only expand scope when a smaller verified slice can no longer solve the active problem
-- new scope must come with a clear proof path and rollback path
+Use `npm run agent-control -- stop-lines` for allowed work, forbidden work, proof path, rollback path, and reopen criteria.
 
 ## Current Loop Execution Stop-Line
 
-Allowed now:
-- manual and documented loop planning
-- check scripts and verification helpers
-- limited automation only when its inputs, outputs, and stop conditions are explicit
+Card id: `loop-execution`
 
-Explicitly not allowed now:
-- hidden infinite loops
-- autonomous execution without stop-lines or proof path
-- unverified state mutation across external repos
-- planner-driven execution claims without working verification
-
-Reopen criteria:
-- only broaden execution authority after a concrete use case exists and the verification surface is already in place
-- keep loop control explicit and reviewable by default
+Use `npm run agent-control -- stop-lines` for allowed work, forbidden work, proof path, rollback path, and reopen criteria.

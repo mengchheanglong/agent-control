@@ -11,10 +11,12 @@
     "node": ">=20"
   },
   "scripts": {
-    "check": "npm run check:agent-control && npm run check:reusable",
+    "check": "npm run check:agent-control && npm test && npm run preflight",
     "check:agent-control": "node scripts/check-agent-control-authority.mjs",
     "check:reusable": "node scripts/check-reusable-install.mjs",
-    "agent-control": "node scripts/agent-control.mjs"
+    "agent-control": "node scripts/agent-control.mjs",
+    "preflight": "node scripts/agent-control.mjs preflight --file templates/project-memory.md",
+    "test": "node --test tests/*.test.mjs"
   },
   "keywords": [
     "agents",

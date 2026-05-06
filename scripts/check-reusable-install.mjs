@@ -10,7 +10,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 function shouldCopy(src) {
   const relativePath = path.relative(ROOT, src).replace(/\\/g, "/");
   const parts = relativePath.split("/");
-  return !parts.includes(".git") && !parts.includes("node_modules") && !parts.includes(".DS_Store");
+  return !parts.includes(".git") && !parts.includes("node_modules") && !parts.includes("dist") && !parts.includes(".DS_Store");
 }
 
 function main() {
