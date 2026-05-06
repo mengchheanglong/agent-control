@@ -211,7 +211,7 @@ function main() {
   assertManifest(manifest);
   assertPackage(packageJson);
 
-  assertContains("AGENTS.md", agentsText, ["README.md", "implement.md", "do not stop after cloning", "adoption protocol", "agent-control/", "host `.gitignore`", "discovery bridge"]);
+  assertContains("AGENTS.md", agentsText, ["README.md", "implement.md", "do not stop after cloning", "adoption protocol", "agent-control/", "host `.gitignore`", "host root `AGENTS.md`", "discovery bridge"]);
   assert.ok(countNonEmptyLines(agentsText) <= 8, "AGENTS.md must stay thin");
 
   assertContains("README.md", readmeText, [
@@ -222,6 +222,8 @@ function main() {
     "do not stop after cloning",
     "agent-control/",
     "host project's `.gitignore`",
+    "host root `AGENTS.md`",
+    "Use `agent-control/` for workflow memory",
     "Minimum post-clone sequence",
     "authority.manifest.json",
     "templates/project-memory.md",
@@ -238,12 +240,12 @@ function main() {
   assertContains("implement.md", implementText, ["Agent Control Entrypoint", PATHS.activeRunbook, PATHS.currentPriority]);
   assert.ok(countNonEmptyLines(implementText) <= 10, "implement.md must remain a thin entrypoint");
 
-  assertContains("runbook/active.md", activeRunbookText, ["agent-first", "do not stop at clone completion", "agent-control/", "host `.gitignore`", "memory/project.md", "memory/state.json", "npm run agent-control -- show-next", "npm run check:reusable"]);
-  assertContains("runbook/current-priority.md", currentPriorityText, ["npm run check:reusable", "templates/project-memory.md", "memory/state.json"]);
+  assertContains("runbook/active.md", activeRunbookText, ["agent-first", "do not stop at clone completion", "agent-control/", "host `.gitignore`", "host root `AGENTS.md`", "agent-control/memory/project.md", "agent-control/memory/state.json", "npm run agent-control -- show-next", "npm run check:reusable"]);
+  assertContains("runbook/current-priority.md", currentPriorityText, ["post-clone adoption correctness", "host-repo cleanliness", "templates/project-memory.md", "agent-control/memory/state.json"]);
   assertContains("policies/continuation-rules.md", continuationRulesText, ["stop-line card", "Do not use a numeric continuation quota"]);
-  assertContains("policies/logging-rules.md", loggingRulesText, ["memory/project.md", "memory/state.json", "templates/project-memory.md"]);
+  assertContains("policies/logging-rules.md", loggingRulesText, ["agent-control/memory/project.md", "agent-control/memory/state.json", "templates/project-memory.md"]);
   assertContains("logs/README.md", logsReadmeText, ["logs/YYYY-MM/", "npm run agent-control -- analyze-logs"]);
-  assertContains("memory/README.md", memoryReadmeText, ["memory/project.md", "memory/state.json", "--context", "Do not use project memory as a transcript"]);
+  assertContains("memory/README.md", memoryReadmeText, ["agent-control/memory/project.md", "agent-control/memory/state.json", "agent-control/", "--context", "Do not use project memory as a transcript"]);
 
   assertStopLineCards(stopLinesText, stopLineCards);
   assertLines("templates/cycle-entry.md", cycleTemplateText, REQUIRED_CYCLE_LINES);
@@ -260,6 +262,7 @@ function main() {
     "#!/usr/bin/env node",
     "adoption-protocol",
     "host .gitignore",
+    "hostAgentPointer",
     "preflight",
     "bootstrap",
     "audit-memory",
@@ -292,6 +295,7 @@ function main() {
     "node:test",
     "adoption protocol is agent-first",
     "agent-control/",
+    "host AGENTS\\.md pointer",
     "preflight",
     "bootstrap",
     "audit-memory",

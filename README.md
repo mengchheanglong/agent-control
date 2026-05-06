@@ -1,6 +1,6 @@
 # Agent Control
 
-Agent Control is a self-contained repo for improving agent workflow, bounded loops, verification discipline, and handoff quality.
+Agent Control is a self-contained repo for improving AI coding agent workflow, bounded loops, verification discipline, project memory, and handoff quality.
 
 It is designed as an agent-first operating surface rather than a framework: clear runbooks, explicit stop-lines, reusable templates, and a repo-local check that keeps the authority docs aligned.
 
@@ -26,11 +26,18 @@ Then the agent records the result with `bootstrap --context`. The CLI should sta
 
 By default, add `agent-control/` to the host project's `.gitignore` after cloning. Do not overwrite existing ignore rules. Skip this only when the user explicitly wants to vendor Agent Control into the host repo.
 
-Minimum post-clone sequence:
+Also create or update the host root `AGENTS.md` so future agents know Agent Control exists even though `agent-control/` is ignored. Preserve any existing host instructions and add a short pointer like:
+
+```md
+Use `agent-control/` for workflow memory and verification discipline. Before substantive work, read `agent-control/AGENTS.md` and `agent-control/memory/project.md`. After meaningful changes, update Agent Control memory and regenerate `agent-control/memory/state.json`.
+```
+
+Minimum post-clone sequence, run from inside `agent-control/` unless noted:
 
 ```bash
 npm run agent-control -- adoption-protocol
 # from the host project root, add agent-control/ to .gitignore unless vendoring
+# from the host project root, create or update AGENTS.md to point future agents to agent-control/
 npm run agent-control -- bootstrap --context "..." --project-shape "..." --current-truth "..." --constraint "..." --next "..." --proof "..."
 npm run check
 ```
@@ -44,11 +51,11 @@ npm run check
 - `policies/`: stable guardrails, continuation rules, logging rules, and stop-line cards
 - `templates/`: reusable cycle, loop-run, and handoff formats
 - `templates/project-memory.md`: compact project memory template for imported projects
-- `memory/`: guidance for keeping `memory/project.md` and generated `memory/state.json` as active agent memory in imported projects
+- `memory/`: guidance for keeping `agent-control/memory/project.md` and generated `agent-control/memory/state.json` as active agent memory in imported projects
 - `logs/`: optional run history for the project using this repo
 - `scripts/`: lightweight validation and operating helpers, including `scripts/agent-control.mjs`
 
-## Quick start
+## Maintaining This Repo
 
 1. Read `implement.md`.
 2. Read `runbook/active.md`.
@@ -66,7 +73,7 @@ npm run check
 - `npm run agent-control -- update-memory`: add durable truth, decisions, suggestions, questions, recent changes, next move, and proof path
 - `npm run agent-control -- show-memory`: print the active project memory
 - `npm run agent-control -- memory-state`: print project memory plus the context capsule as structured JSON
-- `npm run agent-control -- sync-state`: regenerate `memory/state.json` from `memory/project.md`
+- `npm run agent-control -- sync-state`: regenerate repo-local `memory/state.json` from `memory/project.md`
 - `npm run agent-control -- show-next`: print the next best move, proof path, and active constraints from project memory
 - `npm run agent-control -- score-next`: rank candidate next moves by scope, proof strength, specificity, and constraint fit
 - `npm run agent-control -- audit-memory`: check memory for placeholders, bloat, and weak proof paths

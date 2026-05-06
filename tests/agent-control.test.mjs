@@ -58,9 +58,11 @@ test("adoption protocol is agent-first and non-interactive", () => {
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
   assert.equal(report.ok, true);
-  assert.match(report.rule, /edits the host \.gitignore/u);
+  assert.match(report.rule, /host AGENTS\.md pointer/u);
   assert.match(report.commandShape, /--context/u);
+  assert.match(report.hostAgentPointer, /agent-control\/memory\/project\.md/u);
   assert.ok(report.agentSteps.some((step) => step.includes("agent-control/")));
+  assert.ok(report.agentSteps.some((step) => step.includes("host root AGENTS.md")));
   assert.ok(report.agentSteps.some((step) => step.includes("Ask the user one optional question")));
 });
 

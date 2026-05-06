@@ -1,14 +1,14 @@
 # Project Memory
 
-Imported projects can keep their active agent memory at `memory/project.md`.
+Imported projects keep their active agent memory at `agent-control/memory/project.md`.
 
 Project memory is a compact operating state for coding agents. It should help the next agent understand the project context, current truth, constraints, accepted decisions, useful suggestions, open questions, next best move, and proof path.
 
-`memory/state.json` is a generated context capsule for tools. Regenerate it from Markdown instead of hand-editing it.
+`agent-control/memory/state.json` is a generated context capsule for tools. Regenerate it from Markdown instead of hand-editing it.
 
 Do not use project memory as a transcript, diary, or full log. Put detailed history under `logs/`; keep memory short and current.
 
-Start a new imported project after the agent has inspected the host project and asked the user for optional extra context:
+Start a new imported project after the agent has inspected the host project, added `agent-control/` to the host `.gitignore` unless vendoring is requested, and asked the user for optional extra context:
 
 ```bash
 npm run agent-control -- bootstrap --context "..."

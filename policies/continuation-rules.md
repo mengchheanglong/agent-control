@@ -3,7 +3,7 @@
 ## Task Selection
 
 At each cycle:
-1. refresh repo truth from code, records, and relevant docs
+1. refresh relevant truth from code, records, and docs; during adoption, start with host project truth
 2. identify candidate next tasks
 3. rank by mission usefulness, bounded scope, verification strength, readiness, regression risk, and shared value
 4. choose exactly one bounded task

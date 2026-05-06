@@ -1,6 +1,6 @@
 # Logs
 
-Use this directory for repo-local cycle history, loop-run notes, and handoff snapshots.
+Use this directory for cycle history, loop-run notes, and handoff snapshots for the project using Agent Control.
 
 Recommended layout:
 - `logs/YYYY-MM/` for dated run entries

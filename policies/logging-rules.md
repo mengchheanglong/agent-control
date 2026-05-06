@@ -8,8 +8,8 @@ Keep active guidance separate from historical records.
 - `policies/`: stable rules
 - `logs/`: completed cycle, loop-run, and handoff history
 - `templates/`: reusable record formats
-- `memory/project.md`: compact current operating state in imported projects
-- `memory/state.json`: generated context capsule for tooling
+- `agent-control/memory/project.md`: compact current operating state in imported projects
+- `agent-control/memory/state.json`: generated context capsule for tooling
 
 ## Destinations
 
@@ -17,8 +17,8 @@ Keep active guidance separate from historical records.
 - keep active doctrine out of logs
 - keep `implement.md` thin
 - use `npm run agent-control -- analyze-logs` for log scans
-- update `memory/project.md` after meaningful cycles with durable context, truth, decisions, constraints, suggestions, questions, next best move, and proof path
-- regenerate `memory/state.json` with `npm run agent-control -- sync-state` when a tool needs structured state
+- update `agent-control/memory/project.md` after meaningful cycles with durable context, truth, decisions, constraints, suggestions, questions, next best move, and proof path
+- regenerate `agent-control/memory/state.json` with `npm run agent-control -- sync-state` when a tool needs structured state
 
 ## Model
 
